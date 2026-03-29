@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+
+:root {
+  --bg: #efe9df;
+  --accent: #c2410c;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  font-family: 'Inter', sans-serif;
+}
+
+/* HERO */
+.hero {
+  height: 34vh;
+  background: url('portada.jpg') center 40% / cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* CAPA BLANCA TENUE + OSCURA */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(255,255,255,.35),
+    rgba(0,0,0,.4)
+  );
+}
+
+/* LOGO MÁS VISIBLE */
+.logo {
+  width: 260px;
+  z-index: 2;
+  position: relative;
+  filter: drop-shadow(0 10px 30px rgba(0,0,0,.7));
+}
+
+/* NAV */
+.nav {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  background: rgba(239,233,223,.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #ddd;
+}
+
+.nav button {
+  border: none;
+  background: transparent;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.nav button.active {
+  background: var(--accent);
+  color: white;
+}
+
+/* SECTION */
+.section {
+  max-width: 1000px;
+  margin: auto;
+  padding: 40px 20px;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: .6s ease;
+}
+
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* IMÁGENES (MEJOR CONTRASTE) */
+.section img {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  filter: brightness(.95);
+}
+
+/* MENU */
+.menu {
+  display: grid;
+  gap: 10px;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.price {
+  color: #666;
+}
+
+/* WHATS */
+.whatsapp {
+  position: fixed;
+  right: 15px;
+  bottom: 75px;
+  background: #25d366;
+  color: white;
+  padding: 18px;
+  border-radius: 50%;
+  font-size: 28px;
+  z-index: 999;
+  box-shadow: 0 10px 25px rgba(0,0,0,.3);
+}
+
+/* GURU */
+.guru-floating {
+  position: fixed;
+  left: 10px;
+  bottom: 75px;
+  transform: scale(.65);
+  z-index: 999;
+}
+
+/* FOOTER MEJOR */
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #1a1a1a;
+  color: #ddd;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+  border-top: 1px solid #333;
+}
+
+/* FACEBOOK DESTACADO */
+.footer a {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 20px;
+  color: #1877f2;
+  transition: .3s;
+}
+
+.footer a:hover {
+  transform: scale(1.2);
+  color: #4da3ff;
+}
+
+/* RESPONSIVE */
+@media (max-width:600px){
+  .logo { width: 180px; }
+  .hero { height: 28vh; }
+}

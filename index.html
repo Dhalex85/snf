@@ -3,44 +3,351 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>San Francisco</title>
-
-<link rel="stylesheet" href="styles.css">
-
-<link rel="preload" as="image" href="portada.jpg">
-
+<title>Restaurante San Francisco · Xala</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <link href="https://awards.infcdn.net/2024/circle_v3.css" rel="stylesheet">
-</head>
+<style>
 
+:root {
+  --gold:   #c9a84c;
+  --gold2:  #e8c97a;
+  --dark:   #0e0c09;
+  --border: rgba(201,168,76,.18);
+  --text:   #f0ead8;
+  --muted:  #9a9080;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--dark); color: var(--text); font-family: 'Jost', sans-serif; font-weight: 300; overflow-x: hidden; }
+
+/* HERO */
+.hero { position: relative; height: 92vh; min-height: 480px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.hero-bg { position: absolute; inset: 0; background: url('portada.jpg') center 40% / cover no-repeat; transform: scale(1.06); animation: heroZoom 20s ease-out forwards; }
+@keyframes heroZoom { from{transform:scale(1.06)} to{transform:scale(1)} }
+.hero-overlay { position: absolute; inset: 0; background: linear-gradient(rgba(14,12,9,.2) 0%, rgba(14,12,9,.5) 55%, rgba(14,12,9,.98) 100%); }
+.hero-overlay::after { content:''; position:absolute; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); opacity:.4; pointer-events:none; }
+.hero-logo { position:relative; z-index:2; width:200px; opacity:0; transform:translateY(18px); animation:fadeUp .9s .3s ease forwards; }
+.hero-scroll { position:absolute; bottom:28px; left:50%; transform:translateX(-50%); z-index:2; display:flex; flex-direction:column; align-items:center; gap:8px; font-size:.62rem; letter-spacing:.28em; color:var(--muted); opacity:0; animation:fadeUp .9s 1s ease forwards; }
+.hero-scroll-line { width:1px; height:38px; background:linear-gradient(to bottom,var(--gold),transparent); animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+@keyframes fadeUp { to{opacity:1;transform:translateY(0)} }
+
+/* NAV */
+.nav-wrap { position:sticky; top:0; z-index:100; background:rgba(14,12,9,.93); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+.nav-inner { max-width:960px; margin:auto; padding:0 16px; display:flex; align-items:center; overflow-x:auto; scrollbar-width:none; gap:2px; }
+.nav-inner::-webkit-scrollbar { display:none; }
+.nav-btn { flex-shrink:0; background:none; border:none; color:var(--muted); font-family:'Jost',sans-serif; font-size:.67rem; font-weight:400; letter-spacing:.16em; text-transform:uppercase; padding:15px 12px; cursor:pointer; transition:color .25s; position:relative; white-space:nowrap; }
+.nav-btn::after { content:''; position:absolute; bottom:0; left:12px; right:12px; height:2px; background:var(--gold); transform:scaleX(0); transition:transform .3s cubic-bezier(.4,0,.2,1); }
+.nav-btn:hover { color:var(--text); }
+.nav-btn.active { color:var(--gold); }
+.nav-btn.active::after { transform:scaleX(1); }
+
+/* MAIN */
+main { max-width:960px; margin:0 auto; padding:60px 24px 130px; }
+
+/* SECTION */
+.section { margin-bottom:72px; opacity:0; transform:translateY(32px); transition:opacity .65s ease,transform .65s ease; }
+.section.visible { opacity:1; transform:translateY(0); }
+.section-img { width:100%; height:210px; object-fit:cover; border-radius:4px; margin-bottom:24px; filter:brightness(.85) saturate(.88); transition:filter .4s; }
+.section-img:hover { filter:brightness(.94) saturate(1); }
+.section-header { display:flex; align-items:flex-end; gap:18px; margin-bottom:24px; }
+.section-title { font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(1.75rem,4vw,2.4rem); letter-spacing:.04em; line-height:1; color:var(--text); flex-shrink:0; }
+.section-line { flex:1; height:1px; background:linear-gradient(to right,var(--border),transparent); margin-bottom:5px; }
+.subsection-title { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem; color:var(--gold); letter-spacing:.08em; margin:24px 0 10px; opacity:.85; }
+
+/* ITEMS */
+.menu-grid { display:grid; gap:0; }
+.menu-item { display:flex; justify-content:space-between; align-items:baseline; gap:10px; padding:12px 0; border-bottom:1px solid var(--border); }
+.menu-item:last-child { border-bottom:none; }
+.item-dots { flex:1; border-bottom:1px dotted rgba(201,168,76,.18); margin:0 8px 4px; }
+.item-name { font-size:.9rem; font-weight:300; color:var(--text); letter-spacing:.02em; flex-shrink:0; max-width:68%; }
+.item-price { font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-weight:400; color:var(--gold); white-space:nowrap; flex-shrink:0; }
+
+/* WHATSAPP */
+.whatsapp { position:fixed; right:20px; bottom:68px; width:52px; height:52px; background:#25d366; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.45rem; z-index:999; box-shadow:0 4px 20px rgba(37,211,102,.4); transition:transform .25s,box-shadow .25s; text-decoration:none; }
+.whatsapp:hover { transform:scale(1.1); box-shadow:0 6px 28px rgba(37,211,102,.6); }
+
+/* GURU */
+.guru-floating { position:fixed; left:10px; bottom:58px; transform:scale(.62); transform-origin:bottom left; z-index:999; }
+
+/* FOOTER */
+.footer { position:fixed; bottom:0; left:0; right:0; z-index:200; background:rgba(10,9,7,.97); border-top:1px solid var(--border); padding:10px 20px; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:8px 14px; font-size:.68rem; letter-spacing:.13em; color:var(--muted); text-transform:uppercase; }
+.footer-dot { color:var(--gold); opacity:.55; font-size:.45rem; vertical-align:middle; }
+.footer a { color:#1877f2; font-size:1.05rem; transition:color .2s,transform .2s; display:flex; align-items:center; }
+.footer a:hover { color:#60a5fa; transform:scale(1.2); }
+
+/* RESPONSIVE */
+@media (max-width:600px) {
+  .hero-logo { width:150px; }
+  main { padding:36px 16px 120px; }
+  .section-img { height:160px; }
+  .nav-btn { font-size:.62rem; padding:13px 9px; }
+  .footer { font-size:.61rem; padding:8px 12px; gap:5px 8px; }
+  .item-name { font-size:.83rem; max-width:62%; }
+}
+@media (min-width:700px) { .menu-grid { grid-template-columns:1fr 1fr; gap:0 44px; } }
+@media (min-width:900px) { ::-webkit-scrollbar{width:6px} ::-webkit-scrollbar-track{background:var(--dark)} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px} }
+
+</style>
+</head>
 <body>
 
-<header class="hero">
-  <div class="overlay"></div>
-  <img src="logo.png" class="logo">
+<header class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <img src="logo.png" alt="Restaurante San Francisco" class="hero-logo">
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    <span>MENÚ</span>
+  </div>
 </header>
 
-<nav id="nav" class="nav"></nav>
-
+<nav class="nav-wrap"><div class="nav-inner" id="nav"></div></nav>
 <main id="app"></main>
 
-<a class="whatsapp" href="https://wa.me/525532387057" target="_blank">
+<a class="whatsapp" href="https://wa.me/525532387057" target="_blank" aria-label="WhatsApp">
   <i class="fab fa-whatsapp"></i>
 </a>
 
 <div class="guru-floating">
   <div id="circle_bw" data-length="38" class="circle_bw_black"
-  onclick="window.open('https://es.restaurantguru.com/Restaurante-San-Francisco-Xala')">
+    onclick="window.open('https://es.restaurantguru.com/Restaurante-San-Francisco-Xala')">
   </div>
 </div>
 
 <footer class="footer">
-  San Francisco · Xala, Axapusco
-  <a href="#"><i class="fab fa-facebook-f"></i></a>
+  <span>San Francisco</span>
+  <span class="footer-dot">◆</span>
+  <span>Xala, Axapusco</span>
+  <span class="footer-dot">◆</span>
+  <span>Estado de México</span>
+  <a href="https://www.facebook.com/ElSanFrancisco" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
 </footer>
 
-<script src="data.js"></script>
-<script src="app.js"></script>
+<script>
+const menuData = {
+  "Desayunos": {
+    img:"https://images.unsplash.com/photo-1525351484163-7529414344d8?w=900&q=80",
+    items:[
+      ["Huevos Rancheros",55],["Huevos a la Mexicana",55],["Huevos con Jamón",55],
+      ["Huevos con Chorizo",55],["Huevos con Tocino",60],["Omelet de Jamón con Queso",85],
+      ["Omelet de Champiñones con Queso",85],["Tacos de Pollo con Guacamole",85],
+      ["Enchiladas (Verdes, Rojas, Suizas, Mole)",85],["Chilaquiles con Pollo o Huevo",85],
+      ["Chilaquiles con Carne Asada",180],["Hot Cakes",70],["Jugo de Naranja",40],
+      ["Café (Americano, de Olla)",20],["Café con Leche",25],["Café Cappuccino",55],
+      ["Nescafé / Té",20],["Chocolate",30],["Leche Fría",30],["Malteada (Chocolate, Fresa)",45]
+    ]
+  },
+  "Quesos": {
+    img:"https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=900&q=80",
+    items:[
+      ["Quesitos de la Casa (por pza)",16],["Choriqueso",110],
+      ["Queso Fundido con Chistorra",110],["Queso Fundido con Champiñones",110]
+    ]
+  },
+  "Ensaladas": {
+    img:"https://images.unsplash.com/photo-1607532941433-304659e8198a?w=900&q=80",
+    items:[
+      ["Ensalada de Atún",95],["Ensalada de Pollo",100],["Ensalada de Camarón",120]
+    ]
+  },
+  "Sopas": {
+    img:"https://images.unsplash.com/photo-1547592180-85f173990554?w=900&q=80",
+    items:[
+      ["Spaghetti",55],["Arroz con Huevo",45],["Consomé de Pollo",45],
+      ["Caldo Tlalpeño",45],["Sopa de Papa",45],["Sopa Azteca",60],
+      ["Sopa de Ajo",60],["Sopa de Cebolla",60],["Sopa de Médula",75],
+      ["Crema de Champiñones",65],["Crema de Elote",65],["Crema de Espárragos",65],
+      ["Caldo de Camarón",115]
+    ]
+  },
+  "Carnes": {
+    img:"https://images.unsplash.com/photo-1558030006-450675393462?w=900&q=80",
+    items:[
+      ["T-Bone",245],["Arrachera",240],["Carne Asada",180],
+      ["Carne Asada a la Tampiqueña",195],["Plato Huasteco",195],
+      ["Filete Mignon",210],["Filete Gratinado",225],["Filete Estromboli",200],
+      ["Milanesa de Filete",195],["Milanesa Cordón Blue",210],
+      ["Brocheta de Filete",195],["Brocheta de Arrachera con Camarón",280],
+      ["Puntas a la Mexicana",195],["Puntas al Chipotle",195],["Puntas al Albañil",195]
+    ]
+  },
+  "Pollo": {
+    img:"https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=900&q=80",
+    items:[
+      ["Pechuga Ranchera",150],["Pechuga Empanizada",150],["Pechuga Cordón Blue",170],
+      ["Pechuga a la Plancha",140],["Pechuga Especial (Camarón y Champiñón)",190]
+    ]
+  },
+  "Mariscos": {
+    img:"https://images.unsplash.com/photo-1625944525533-473f1a3d54e7?w=900&q=80",
+    subsections:[
+      { label:"Especialidades Marineras", items:[
+        ["Entremés Especial (Pulpo y Camarón)",175],["Cazuela de Mariscos",180],
+        ["Tacos de Camarón",135],["Tacos de Marlín Ahumado",135],
+        ["Tostadas (Pulpo y Camarón)",145]
+      ]},
+      { label:"Cócteles", items:[
+        ["Cóctel de Camarón",100],["Cóctel Campechana (Pulpo y Camarón)",100],
+        ["Cóctel de Pulpo",100],["Ceviche de Pescado",140],["Vuelve a la Vida",140],
+        ["Aguacate Relleno de Camarón",115],["Aguacate Relleno de Atún",95]
+      ]},
+      { label:"Camarones", items:[
+        ["Brocheta de Camarón",210],["Camarones al Mojo de Ajo",210],
+        ["Camarones al Ajillo",210],["Camarones Empanizados",210],
+        ["Camarones a la Diabla",210],["Camarones a la Plancha",210],
+        ["Camarones a la Veracruzana",210],["Camarones Rellenos de Marlín",250]
+      ]},
+      { label:"Pescados", items:[
+        ["Filete a la Plancha",200],["Filete al Mojo de Ajo",210],
+        ["Filete al Ajillo",210],["Filete a la Diabla",210],
+        ["Filete a la Veracruzana",210],["Filete Empanizado",210],
+        ["Filete Sol",210],["Filete Relleno",260],
+        ["Filete Especial (Camarón y Champiñón)",265],
+        ["Mojarra Frita (Ajo, Ajillo, Diabla)",170],
+        ["Pescado al Mojo de Ajo",210],["Pescado a la Plancha",210],
+        ["Pescado al Ajillo",210],["Pescado a la Diabla",210],
+        ["Pescado a la Veracruzana",210],["Pescado Relleno",260]
+      ]}
+    ]
+  },
+  "Postres": {
+    img:"https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=900&q=80",
+    items:[
+      ["Ate con Queso",50],["Duraznos (Crema o Rompope)",50],["Mangos (Crema o Rompope)",50]
+    ]
+  },
+  "Bebidas": {
+    img:"https://images.unsplash.com/photo-1544145945-f90425340c7e?w=900&q=80",
+    subsections:[
+      { label:"Fuente de Sodas", items:[
+        ["Refresco",35],["Coca Cola Light",35],["Limonada",40],["Naranjada",40],
+        ["Jarra de Agua de Fruta",90],["Jarra de Naranjada o Limonada",130]
+      ]},
+      { label:"Cerveza", items:[
+        ["Corona",40],["Victoria",40],["Modelo Especial",45],["Negra Modelo",45],
+        ["Michelada con Salsas",50],["Michelada con Clamato",60]
+      ]},
+      { label:"Vinos de Mesa (copa)", items:[
+        ["Vino Tinto Concha y Toro",75],["Vino Blanco Concha y Toro",75]
+      ]},
+      { label:"Digestivos", items:[
+        ["Licor Bailey's",100],["Licor Midori",135],["Amaretto",135]
+      ]}
+    ]
+  },
+  "Preparadas": {
+    img:"https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=900&q=80",
+    subsections:[
+      { label:"Bebidas Preparadas", items:[
+        ["Sangría Preparada",70],["Bloody Mary",70],["Clamato",70],["Bull",75],
+        ["Desarmador",70],["Planters Punch",70],["Medias de Seda",80],
+        ["Beso de Ángel",80],["Alfonso 13",90],["Ruso Negro",90],["Ruso Blanco",90],
+        ["Tom Collins",70],["Conejo",80],["Tequila Agrio",70],["Paloma",70],
+        ["Piña Colada",85],["Midori Colado",130],["Amaretto Colado",130],
+        ["Piedra",95],["Iguana Margarita",130],["Sunset Margarita",130]
+      ]}
+    ]
+  },
+  "Licores": {
+    img:"https://images.unsplash.com/photo-1569529465841-dfecdab7503b?w=900&q=80",
+    subsections:[
+      { label:"Tequila (copa)", items:[
+        ["Don Julio Reposado",110],["Herradura Reposado",100],
+        ["Cuervo Tradicional",75],["Hornitos",75],["100 Años Reposado",60]
+      ]},
+      { label:"Ron", items:[
+        ["Bacardí Añejo",60],["Bacardí Solera",70],["Bacardí Blanco",50]
+      ]},
+      { label:"Brandy", items:[
+        ["Torres 10",75],["Terry",70],["Fundador",70],["Presidente",50]
+      ]},
+      { label:"Vodka", items:[
+        ["Smirnoff",65],["Absolut Azul",75]
+      ]},
+      { label:"Whisky (copa)", items:[
+        ["Chivas Regal",105],["Buchanan's",135],["Johnnie Walker Red Label",75]
+      ]},
+      { label:"Coñac", items:[
+        ["Martell V.S.O.P.",150]
+      ]}
+    ]
+  }
+};
 
+const app = document.getElementById('app');
+const nav = document.getElementById('nav');
+const sections = [];
+
+function buildGrid(items) {
+  const grid = document.createElement('div');
+  grid.className = 'menu-grid';
+  items.forEach(([name, price]) => {
+    const div = document.createElement('div');
+    div.className = 'menu-item';
+    div.innerHTML = `<span class="item-name">${name}</span><span class="item-dots"></span><span class="item-price">$${price}</span>`;
+    grid.appendChild(div);
+  });
+  return grid;
+}
+
+Object.entries(menuData).forEach(([cat, data]) => {
+  const btn = document.createElement('button');
+  btn.className = 'nav-btn';
+  btn.textContent = cat;
+  nav.appendChild(btn);
+
+  const sec = document.createElement('section');
+  sec.className = 'section';
+  sec.id = 'cat-' + cat.replace(/[\s\/]/g,'_');
+
+  const img = document.createElement('img');
+  img.src = data.img; img.alt = cat; img.className = 'section-img'; img.loading = 'lazy';
+  sec.appendChild(img);
+
+  const hdr = document.createElement('div');
+  hdr.className = 'section-header';
+  hdr.innerHTML = `<h2 class="section-title">${cat}</h2><div class="section-line"></div>`;
+  sec.appendChild(hdr);
+
+  if (data.subsections) {
+    data.subsections.forEach(sub => {
+      const st = document.createElement('p');
+      st.className = 'subsection-title';
+      st.textContent = sub.label;
+      sec.appendChild(st);
+      sec.appendChild(buildGrid(sub.items));
+    });
+  } else {
+    sec.appendChild(buildGrid(data.items));
+  }
+
+  app.appendChild(sec);
+  btn.onclick = () => sec.scrollIntoView({ behavior:'smooth', block:'start' });
+  sections.push({ btn, sec });
+});
+
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.07 });
+
+sections.forEach(({ sec }) => io.observe(sec));
+
+window.addEventListener('scroll', () => {
+  sections.forEach(({ btn, sec }) => {
+    const r = sec.getBoundingClientRect();
+    if (r.top < 130 && r.bottom > 130) {
+      btn.classList.add('active');
+      btn.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+}, { passive: true });
+</script>
 </body>
 </html>
